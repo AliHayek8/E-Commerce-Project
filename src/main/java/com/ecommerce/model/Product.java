@@ -7,6 +7,10 @@ public class Product {
     private double price;
     private int stockQuantity;
 
+
+    public Product() {
+    }
+
     public Product(Long id, String name, double price, int stockQuantity) {
         this.id = id;
         this.name = name;
