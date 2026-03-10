@@ -41,13 +41,9 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id){
 
-        boolean deleted = productService.deleteProduct(id);
+        productService.deleteProduct(id);
 
-        if(deleted){
-            return "Product deleted successfully";
-        }
-
-        return "Product not found";
+        return "Product deleted successfully";
     }
 
 }
