@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import com.ecommerce.dto.ApiResponse;
 
 import java.util.List;
 
@@ -18,19 +19,39 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ApiResponse<List<Product>> getAllProducts(){
+
+        List<Product> products = productService.getAllProducts();
+
+        return new ApiResponse<>(
+                true,
+                "Products fetched successfully",
+                products
+        );
     }
 
     @PostMapping
-    public String addProduct(@RequestBody Product product){
-        productService.addProduct(product);
-        return "Product added successfully";
+    public ApiResponse<Product> addProduct(@RequestBody Product product){
+
+        Product saved = productService.addProduct(product);
+
+        return new ApiResponse<>(
+                true,
+                "Product created successfully",
+                saved
+        );
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id){
-        return productService.getProductById(id);
+    public ApiResponse<Product> getProductById(@PathVariable Long id){
+
+        Product product = productService.getProductById(id);
+
+        return new ApiResponse<>(
+                true,
+                "Product fetched successfully",
+                product
+        );
     }
 
     @PutMapping("/{id}")

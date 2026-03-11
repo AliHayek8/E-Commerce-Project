@@ -1,53 +1,39 @@
 package com.ecommerce.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "order_items")
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class OrderItem {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Product product;
+
     private int quantity;
+
     private double price;
 
-    public OrderItem(Long id, Product product, int quantity, double price) {
-        this.id = id;
-        this.product = product;
-        this.quantity = quantity;
-        this.price = price;
-    }
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double calculateSubtotal() {
+    public double calculateSubtotal(){
         return price * quantity;
     }
+
+
+
 }

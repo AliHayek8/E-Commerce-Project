@@ -1,41 +1,27 @@
 package com.ecommerce.model;
+import jakarta.persistence.*;
+import java.util.List;
+import lombok.*;
+
+@Entity
+@Table(name = "customers")
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class Customer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private String email;
 
-    public Customer(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
 }

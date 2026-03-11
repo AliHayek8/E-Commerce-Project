@@ -1,60 +1,33 @@
 package com.ecommerce.model;
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import lombok.*;
+
+@Entity
+@Table(name = "payments")
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Payment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Order order;
+
     private double amount;
-    private PaymentMethod paymentMethod;
+
     private LocalDate paymentDate;
 
-    public Payment(Long id, Order order, double amount, PaymentMethod paymentMethod, LocalDate paymentDate) {
-        this.id = id;
-        this.order = order;
-        this.amount = amount;
-        this.paymentMethod = paymentMethod;
-        this.paymentDate = paymentDate;
-    }
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public LocalDate getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
-    }
 
 }
