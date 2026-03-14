@@ -5,6 +5,9 @@ import com.ecommerce.dto.product.ProductResponseDTO;
 import com.ecommerce.model.Product;
 import com.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +66,54 @@ public class ProductService {
     // DELETE
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
+    }
+
+
+    //custom queries
+
+    public List<ProductResponseDTO> filterProductsByPrice(double min, double max){
+
+        List<Product> products = productRepository.findByPriceBetween(min, max);
+
+        return products.stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+
+    public List<ProductResponseDTO> searchProducts(String name){
+
+        List<Product> products = productRepository
+                .findByNameContainingIgnoreCase(name);
+
+        return products.stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+
+    public List<ProductResponseDTO> getProductsInStock(){
+
+        List<Product> products =
+                productRepository.findByStockQuantityGreaterThan(0);
+
+        return products.stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+
+
+    public List<ProductResponseDTO> getProductsPaged(int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        return productPage.getContent()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 
 

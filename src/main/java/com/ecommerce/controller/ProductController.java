@@ -29,7 +29,7 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ApiResponse<ProductResponseDTO> getProductById(@PathVariable Long id){
 
         ProductResponseDTO product = productService.getProductById(id);
@@ -78,5 +78,66 @@ public class ProductController {
                 null
         );
     }
+
+    @GetMapping("/filter")
+    public ApiResponse<List<ProductResponseDTO>> filterProducts(
+            @RequestParam double minPrice,
+            @RequestParam double maxPrice){
+
+        List<ProductResponseDTO> products =
+                productService.filterProductsByPrice(minPrice, maxPrice);
+
+        return new ApiResponse<>(
+                true,
+                "Products filtered successfully",
+                products
+        );
+    }
+
+
+    @GetMapping("/search")
+    public ApiResponse<List<ProductResponseDTO>> searchProducts(
+            @RequestParam String name){
+
+        List<ProductResponseDTO> products =
+                productService.searchProducts(name);
+
+        return new ApiResponse<>(
+                true,
+                "Products found successfully",
+                products
+        );
+    }
+
+
+    @GetMapping("/in-stock")
+    public ApiResponse<List<ProductResponseDTO>> getProductsInStock(){
+
+        List<ProductResponseDTO> products =
+                productService.getProductsInStock();
+
+        return new ApiResponse<>(
+                true,
+                "Products in stock",
+                products
+        );
+    }
+
+
+    @GetMapping("/paged")
+    public ApiResponse<List<ProductResponseDTO>> getProductsPaged(
+            @RequestParam int page,
+            @RequestParam int size){
+
+        List<ProductResponseDTO> products =
+                productService.getProductsPaged(page, size);
+
+        return new ApiResponse<>(
+                true,
+                "Products page fetched successfully",
+                products
+        );
+    }
+
 
 }
