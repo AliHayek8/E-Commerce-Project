@@ -1,46 +1,93 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.model.Customer;
+import com.ecommerce.dto.ApiResponse;
+import com.ecommerce.dto.customer.CustomerRequestDTO;
+import com.ecommerce.dto.customer.CustomerResponseDTO;
 import com.ecommerce.service.CustomerService;
-import com.ecommerce.model.Product;
-import com.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
+
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping
-    public Customer addCustomer(@RequestBody Customer customer){
-        return customerService.addCustomer(customer);
-    }
 
+    // GET ALL
     @GetMapping
-    public List<Customer> getAllCustomers(){
-        return customerService.getAllCustomers();
+    public ApiResponse<List<CustomerResponseDTO>> getAllCustomers(){
+
+        List<CustomerResponseDTO> customers = customerService.getAllCustomers();
+
+        return new ApiResponse<>(
+                true,
+                "Customers fetched successfully",
+                customers
+        );
     }
 
+
+    // GET BY ID
     @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Long id){
-        return customerService.getCustomerById(id);
+    public ApiResponse<CustomerResponseDTO> getCustomerById(@PathVariable Long id){
+
+        CustomerResponseDTO customer = customerService.getCustomerById(id);
+
+        return new ApiResponse<>(
+                true,
+                "Customer fetched successfully",
+                customer
+        );
     }
 
+
+    // CREATE
+    @PostMapping
+    public ApiResponse<CustomerResponseDTO> addCustomer(
+            @RequestBody CustomerRequestDTO dto){
+
+        CustomerResponseDTO savedCustomer = customerService.addCustomer(dto);
+
+        return new ApiResponse<>(
+                true,
+                "Customer created successfully",
+                savedCustomer
+        );
+    }
+
+
+    // UPDATE
     @PutMapping("/{id}")
-    public Customer updateCustomer(@PathVariable Long id,@RequestBody Customer customer){
-        return customerService.updateCustomer(id,customer);
+    public ApiResponse<CustomerResponseDTO> updateCustomer(
+            @PathVariable Long id,
+            @RequestBody CustomerRequestDTO dto){
+
+        CustomerResponseDTO updatedCustomer = customerService.updateCustomer(id, dto);
+
+        return new ApiResponse<>(
+                true,
+                "Customer updated successfully",
+                updatedCustomer
+        );
     }
 
+
+    // DELETE
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id){
+    public ApiResponse<Void> deleteCustomer(@PathVariable Long id){
+
         customerService.deleteCustomer(id);
+
+        return new ApiResponse<>(
+                true,
+                "Customer deleted successfully",
+                null
+        );
     }
+
 }

@@ -1,4 +1,5 @@
 package com.ecommerce.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
@@ -21,6 +22,7 @@ public class Customer {
     private String email;
 
     @OneToMany(mappedBy = "customer")
+    @JsonManagedReference
     private List<Order> orders;
 
 

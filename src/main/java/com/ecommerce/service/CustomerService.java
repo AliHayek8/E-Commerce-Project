@@ -1,10 +1,14 @@
 package com.ecommerce.service;
 
+import com.ecommerce.dto.customer.CustomerRequestDTO;
+import com.ecommerce.dto.customer.CustomerResponseDTO;
 import com.ecommerce.model.Customer;
 import com.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -12,32 +16,84 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Customer addCustomer(Customer customer){
-        return customerRepository.save(customer);
+
+    // CREATE
+    public CustomerResponseDTO addCustomer(CustomerRequestDTO dto){
+
+        Customer customer = mapToEntity(dto);
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        return mapToDTO(savedCustomer);
     }
 
-    public List<Customer> getAllCustomers(){
-        return customerRepository.findAll();
+
+    // READ ALL
+    public List<CustomerResponseDTO> getAllCustomers(){
+
+        List<Customer> customers = customerRepository.findAll();
+
+        return customers.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Customer getCustomerById(Long id){
-        return customerRepository.findById(id).orElse(null);
+
+    // READ BY ID
+    public CustomerResponseDTO getCustomerById(Long id){
+
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        return mapToDTO(customer);
     }
 
-    public Customer updateCustomer(Long id, Customer customer){
 
-        Customer existing = customerRepository.findById(id).orElse(null);
+    // UPDATE
+    public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto){
 
-        if(existing != null){
-            existing.setName(customer.getName());
-            existing.setEmail(customer.getEmail());
-            return customerRepository.save(existing);
-        }
+        Customer existingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        return null;
+        existingCustomer.setName(dto.getName());
+        existingCustomer.setEmail(dto.getEmail());
+
+        Customer updatedCustomer = customerRepository.save(existingCustomer);
+
+        return mapToDTO(updatedCustomer);
     }
 
+
+    // DELETE
     public void deleteCustomer(Long id){
         customerRepository.deleteById(id);
     }
+
+
+    // =============================
+    // Mapping Methods
+    // =============================
+
+    private Customer mapToEntity(CustomerRequestDTO dto){
+
+        Customer customer = new Customer();
+
+        customer.setName(dto.getName());
+        customer.setEmail(dto.getEmail());
+
+        return customer;
+    }
+
+
+    private CustomerResponseDTO mapToDTO(Customer customer){
+
+        CustomerResponseDTO dto = new CustomerResponseDTO();
+
+        dto.setId(customer.getId());
+        dto.setName(customer.getName());
+        dto.setEmail(customer.getEmail());
+
+        return dto;
+    }
+
 }

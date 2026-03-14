@@ -1,41 +1,76 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.model.Customer;
-import com.ecommerce.model.Order;
-import com.ecommerce.model.OrderItem;
+import com.ecommerce.dto.ApiResponse;
+import com.ecommerce.dto.order.OrderRequestDTO;
+import com.ecommerce.dto.order.OrderResponseDTO;
 import com.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
+
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
+
+    // CREATE ORDER
     @PostMapping
-    public Order createOrder(@RequestBody Order order){
-        return orderService.createOrder(order);
+    public ApiResponse<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO dto){
+
+        OrderResponseDTO savedOrder = orderService.createOrder(dto);
+
+        return new ApiResponse<>(
+                true,
+                "Order created successfully",
+                savedOrder
+        );
     }
 
+
+    // GET ALL ORDERS
     @GetMapping
-    public List<Order> getAllOrders(){
-        return orderService.getAllOrders();
+    public ApiResponse<List<OrderResponseDTO>> getAllOrders(){
+
+        List<OrderResponseDTO> orders = orderService.getAllOrders();
+
+        return new ApiResponse<>(
+                true,
+                "Orders fetched successfully",
+                orders
+        );
     }
 
+
+    // GET ORDER BY ID
     @GetMapping("/{id}")
-    public Order getOrder(@PathVariable Long id){
-        return orderService.getOrderById(id);
+    public ApiResponse<OrderResponseDTO> getOrderById(@PathVariable Long id){
+
+        OrderResponseDTO order = orderService.getOrderById(id);
+
+        return new ApiResponse<>(
+                true,
+                "Order fetched successfully",
+                order
+        );
     }
 
+
+    // DELETE ORDER
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Long id){
+    public ApiResponse<Void> deleteOrder(@PathVariable Long id){
+
         orderService.deleteOrder(id);
+
+        return new ApiResponse<>(
+                true,
+                "Order deleted successfully",
+                null
+        );
     }
+
 }

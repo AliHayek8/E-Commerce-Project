@@ -1,27 +1,26 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.model.Product;
+import com.ecommerce.dto.ApiResponse;
+import com.ecommerce.dto.product.ProductRequestDTO;
+import com.ecommerce.dto.product.ProductResponseDTO;
 import com.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import com.ecommerce.dto.ApiResponse;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @GetMapping
-    public ApiResponse<List<Product>> getAllProducts(){
+    public ApiResponse<List<ProductResponseDTO>> getAllProducts(){
 
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponseDTO> products = productService.getAllProducts();
 
         return new ApiResponse<>(
                 true,
@@ -30,22 +29,10 @@ public class ProductController {
         );
     }
 
-    @PostMapping
-    public ApiResponse<Product> addProduct(@RequestBody Product product){
-
-        Product saved = productService.addProduct(product);
-
-        return new ApiResponse<>(
-                true,
-                "Product created successfully",
-                saved
-        );
-    }
-
     @GetMapping("/{id}")
-    public ApiResponse<Product> getProductById(@PathVariable Long id){
+    public ApiResponse<ProductResponseDTO> getProductById(@PathVariable Long id){
 
-        Product product = productService.getProductById(id);
+        ProductResponseDTO product = productService.getProductById(id);
 
         return new ApiResponse<>(
                 true,
@@ -54,17 +41,42 @@ public class ProductController {
         );
     }
 
+    @PostMapping
+    public ApiResponse<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO dto){
+
+        ProductResponseDTO saved = productService.addProduct(dto);
+
+        return new ApiResponse<>(
+                true,
+                "Product created successfully",
+                saved
+        );
+    }
+
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product){
-        return productService.updateProduct(id, product);
+    public ApiResponse<ProductResponseDTO> updateProduct(
+            @PathVariable Long id,
+            @RequestBody ProductRequestDTO dto){
+
+        ProductResponseDTO updated = productService.updateProduct(id, dto);
+
+        return new ApiResponse<>(
+                true,
+                "Product updated successfully",
+                updated
+        );
     }
 
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable Long id){
+    public ApiResponse<Void> deleteProduct(@PathVariable Long id){
 
         productService.deleteProduct(id);
 
-        return "Product deleted successfully";
+        return new ApiResponse<>(
+                true,
+                "Product deleted successfully",
+                null
+        );
     }
 
 }
