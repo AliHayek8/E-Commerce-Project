@@ -2,6 +2,7 @@ package com.ecommerce.service;
 
 import com.ecommerce.dto.customer.CustomerRequestDTO;
 import com.ecommerce.dto.customer.CustomerResponseDTO;
+import com.ecommerce.exception.CustomerNotFoundException;
 import com.ecommerce.model.Customer;
 import com.ecommerce.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class CustomerService {
     public CustomerResponseDTO getCustomerById(Long id){
 
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new CustomerNotFoundException(id));
 
         return mapToDTO(customer);
     }
@@ -53,7 +54,7 @@ public class CustomerService {
     public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto){
 
         Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new CustomerNotFoundException(id));
 
         existingCustomer.setName(dto.getName());
         existingCustomer.setEmail(dto.getEmail());

@@ -4,6 +4,7 @@ import com.ecommerce.dto.ApiResponse;
 import com.ecommerce.dto.customer.CustomerRequestDTO;
 import com.ecommerce.dto.customer.CustomerResponseDTO;
 import com.ecommerce.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class CustomerController {
 
     // CREATE
     @PostMapping
-    public ApiResponse<CustomerResponseDTO> addCustomer(
+    public ApiResponse<CustomerResponseDTO> addCustomer(@Valid
             @RequestBody CustomerRequestDTO dto){
 
         CustomerResponseDTO savedCustomer = customerService.addCustomer(dto);

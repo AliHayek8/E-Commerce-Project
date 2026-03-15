@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.dto.order.*;
+import com.ecommerce.exception.OrderNotFoundException;
 import com.ecommerce.model.*;
 import com.ecommerce.repository.CustomerRepository;
 import com.ecommerce.repository.OrderRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class OrderService {
@@ -32,7 +35,7 @@ public class OrderService {
     public OrderResponseDTO createOrder(OrderRequestDTO dto){
 
         Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new OrderNotFoundException(dto.getCustomerId()));
 
         Order order = new Order();
         order.setCustomer(customer);
@@ -43,7 +46,7 @@ public class OrderService {
         for(OrderItemRequestDTO itemDTO : dto.getItems()){
 
             Product product = productRepository.findById(itemDTO.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+                    .orElseThrow(() -> new OrderNotFoundException(itemDTO.getProductId()));
 
             OrderItem item = new OrderItem();
 
@@ -90,7 +93,7 @@ public class OrderService {
     public OrderResponseDTO getOrderById(Long id){
 
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException(id));
 
         return mapToDTO(order);
     }

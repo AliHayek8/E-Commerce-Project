@@ -2,6 +2,7 @@ package com.ecommerce.service;
 
 import com.ecommerce.dto.product.ProductRequestDTO;
 import com.ecommerce.dto.product.ProductResponseDTO;
+import com.ecommerce.exception.ProductNotFoundException;
 import com.ecommerce.model.Product;
 import com.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ProductService {
     public ProductResponseDTO getProductById(Long id){
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
         return mapToDTO(product);
     }
@@ -52,7 +53,7 @@ public class ProductService {
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO dto){
 
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
         existingProduct.setName(dto.getName());
         existingProduct.setPrice(dto.getPrice());

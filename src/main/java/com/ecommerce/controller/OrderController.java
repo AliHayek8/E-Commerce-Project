@@ -4,6 +4,7 @@ import com.ecommerce.dto.ApiResponse;
 import com.ecommerce.dto.order.OrderRequestDTO;
 import com.ecommerce.dto.order.OrderResponseDTO;
 import com.ecommerce.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class OrderController {
 
     // CREATE ORDER
     @PostMapping
-    public ApiResponse<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO dto){
+    public ApiResponse<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO dto){
 
         OrderResponseDTO savedOrder = orderService.createOrder(dto);
 
