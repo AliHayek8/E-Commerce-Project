@@ -6,6 +6,7 @@ import com.ecommerce.dto.product.ProductResponseDTO;
 import com.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class ProductController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ApiResponse<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO dto){
 
@@ -68,6 +70,7 @@ public class ProductController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteProduct(@PathVariable Long id){
 
