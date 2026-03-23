@@ -51,7 +51,7 @@ The project follows modern backend architecture principles including layered des
 
 ---
 
-### ⚡ AOP (Aspect-Oriented Programming)
+###  AOP (Aspect-Oriented Programming)
 - Logging system for service layer
 - Tracks:
   - Method execution
