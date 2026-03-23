@@ -1,7 +1,9 @@
 package com.ecommerce.service;
 
+import com.ecommerce.model.Customer;
 import com.ecommerce.model.Role;
 import com.ecommerce.model.User;
+import com.ecommerce.repository.CustomerRepository;
 import com.ecommerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,11 +15,21 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerRepository customerRepository;
 
     public User register(User user){
 
+        // إنشاء Customer
+        Customer customer = new Customer();
+        customer.setName(user.getEmail());   // مؤقتًا حتى نضيف DTO لاحقًا
+        customer.setEmail(user.getEmail());
+
+        customerRepository.save(customer);
+
+        // إعداد User
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
+        user.setCustomer(customer);
 
         return userRepository.save(user);
     }
@@ -30,6 +42,7 @@ public class UserService {
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new RuntimeException("Invalid password");
         }
+        System.out.println("PasswordEncoder: " + passwordEncoder);
 
         return user;
     }

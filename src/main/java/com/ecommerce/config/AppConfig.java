@@ -4,8 +4,9 @@ import com.ecommerce.strategy.PaymentStrategy;
 import com.ecommerce.strategy.CreditCardPayment;
 import com.ecommerce.strategy.PaypalPayment;
 import com.ecommerce.strategy.CashPayment;
+import org.springframework.context.annotation.Configuration;
 
-
+@Configuration
 public class AppConfig {
 
     public static PaymentStrategy getPaymentStrategy(String type) {

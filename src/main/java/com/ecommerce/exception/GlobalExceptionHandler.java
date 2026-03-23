@@ -61,21 +61,33 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    // ✅ Runtime exceptions (User not found, Invalid password, etc.)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex){
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
+                ex.getMessage(),
+                null
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
     // Generic errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneralException(Exception ex){
 
         ApiResponse<Void> response = new ApiResponse<>(
                 false,
-                "Internal server error",
+                "Internal server error: " + ex.getMessage(),
                 null
         );
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //validation input
-
+    // Validation input
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidationErrors(
             MethodArgumentNotValidException ex){

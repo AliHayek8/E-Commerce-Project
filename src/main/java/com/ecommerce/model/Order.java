@@ -1,8 +1,5 @@
 package com.ecommerce.model;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -12,11 +9,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "orders")
-
 @Data
 @NoArgsConstructor
-
-
 public class Order {
 
     @Id
@@ -30,12 +24,15 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<OrderItem> items;
-
 
     public Order(Long id, LocalDate orderDate, Customer customer, List<OrderItem> items) {
         this.id = id;
@@ -44,14 +41,13 @@ public class Order {
         this.items = items;
     }
 
-    public double calculateTotal(){
+    public double calculateTotal() {
         double total = 0;
-        for(OrderItem item : items){
+        for (OrderItem item : items) {
             total += item.calculateSubtotal();
         }
         this.totalAmount = total;
         return total;
     }
-
 
 }

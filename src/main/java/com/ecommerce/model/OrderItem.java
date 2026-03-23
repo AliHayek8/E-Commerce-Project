@@ -6,11 +6,9 @@ import lombok.*;
 
 @Entity
 @Table(name = "order_items")
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class OrderItem {
 
     @Id
@@ -23,19 +21,17 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Order order;
 
-
-
-    public double calculateSubtotal(){
+    public double calculateSubtotal() {
         return price * quantity;
     }
-
-
 
 }
